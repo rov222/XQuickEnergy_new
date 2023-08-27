@@ -74,6 +74,7 @@ public class Config {
     public static final String jn_beachList = "beachList";
     public static final String jn_energyRain = "energyRain";
     public static final String jn_giveEnergyRainList = "giveEnergyRainList";
+    public static final String jn_matserIDList = "matserIDList";
     public static final String jn_waitWhenException = "waitWhenException";
     public static final String jn_ancientTreeOnlyWeek = "ancientTreeOnlyWeek";
     /* farm */
@@ -194,6 +195,8 @@ public class Config {
     private boolean ancientTreeOnlyWeek;
 
     private List<String> giveEnergyRainList;
+
+    private List<String> matserIDList;
 
     private int waitWhenException;
 
@@ -649,6 +652,10 @@ public class Config {
 
     public static List<String> getGiveEnergyRainList() {
         return getConfig().giveEnergyRainList;
+    }
+
+    public static List<String> getMatserIDList() {
+        return getConfig().matserIDList;
     }
 
     public static boolean energyRain() {
@@ -1277,6 +1284,8 @@ public class Config {
         c.energyRain = true;
         if (c.giveEnergyRainList == null)
             c.giveEnergyRainList = new ArrayList<>();
+        if (c.matserIDList == null)
+            c.matserIDList = new ArrayList<>();
         c.exchangeEnergyDoubleClick = false;
         c.exchangeEnergyDoubleClickCount = 6;
         c.ancientTreeOnlyWeek = true;
@@ -1535,6 +1544,16 @@ public class Config {
                 }
             }
             Log.i(TAG, jn_giveEnergyRainList + ":" + String.join(",", config.giveEnergyRainList));
+
+            config.matserIDList = new ArrayList<>();
+            if (jo.has(jn_matserIDList)) {
+                ja = jo.getJSONArray(jn_matserIDList);
+                for (int i = 0; i < ja.length(); i++) {
+                    jaa = ja.getJSONArray(i);
+                    config.matserIDList.add(jaa.getString(0));
+                }
+            }
+            Log.i(TAG, jn_matserIDList + ":" + String.join(",", config.matserIDList));
 
             config.reserve = jo.optBoolean(jn_reserve, true);
             Log.i(TAG, jn_reserve + ":" + config.reserve);
@@ -1969,6 +1988,7 @@ public class Config {
             jo.put(jn_beachList, ja);
 
             jo.put(jn_energyRain, config.energyRain);
+
             ja = new JSONArray();
             for (int i = 0; i < config.giveEnergyRainList.size(); i++) {
                 jaa = new JSONArray();
@@ -1976,6 +1996,15 @@ public class Config {
                 ja.put(jaa);
             }
             jo.put(jn_giveEnergyRainList, ja);
+
+            ja = new JSONArray();
+            for (int i = 0; i < config.matserIDList.size(); i++) {
+                jaa = new JSONArray();
+                jaa.put(config.matserIDList.get(i));
+                ja.put(jaa);
+            }
+            jo.put(jn_matserIDList, ja);
+
 
             jo.put("exchangeEnergyDoubleClick", config.exchangeEnergyDoubleClick);
 
